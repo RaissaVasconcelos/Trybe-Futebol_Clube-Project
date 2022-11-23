@@ -14,32 +14,30 @@ const { app } = new App();
 
 const { expect } = chai;
 
+
+
 describe('Seu teste', () => {
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
+//   let chaiHttpResponse: Response;
 
-  // let chaiHttpResponse: Response;
+//   before(async () => {
+//     sinon
+//       .stub(Example, "findOne")
+//       .resolves({
+//         ...<Seu mock>
+//       } as Example);
+//   });
 
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
+//   after(()=>{
+//     (Example.findOne as sinon.SinonStub).restore();
+//   })
 
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
+//   it('...', async () => {
+//     chaiHttpResponse = await chai
+//        .request(app)
+//        ...
 
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
-
-  //   expect(...)
-  // });
+//     expect(...)
+//   });
 
   it('Seu sub-teste', () => {
     expect(false).to.be.eq(true);
