@@ -1,21 +1,42 @@
-import { IUser } from '../interfaces/user.interface';
+import { compare } from 'bcryptjs';
+import createToken from '../utils/jwt';
 import User from '../database/models/UserModel';
-import { encript, decript } from '../utils/bcrypt';
+import { ILogin, IUser } from '../interfaces/user.interface';
+import ErrotHttp from '../error/errorHttp';
+import { IServiceResp } from '../interfaces/messageObject.interface';
 
 export default class UserService {
   public usermodel = new User();
 
-  static async login(user: IUser): Promise<string> {
-    const { email, password } = user;
+  static async getUser(user: ILogin): Promise<IUser> {
+    const { email } = user;
     const [userOk] = await User.findAll({
       where: {
         email,
       },
     });
-    console.log('user', userOk.dataValues);
-    console.log('password', userOk.dataValues.password);
-    console.log('cript', await encript(password));
-    console.log('decript', await decript(password, userOk.dataValues.password));
-    return 'ok';
+
+    if (!userOk) throw new ErrotHttp(400, 'Incorrect email or password');
+
+    return userOk.dataValues;
+  }
+
+  static async login(user: ILogin): Promise<IServiceResp<string>> {
+    const userOk = await this.getUser(user);
+
+    const validate = this.validatePassword(user.password, userOk.password);
+
+    if (!validate) {
+      throw new ErrotHttp(400, 'Incorrect email or password');
+    }
+
+    const token = createToken(userOk);
+
+    return { statusCode: 200, message: token };
+  }
+
+  static async validatePassword(passworduser: string, passwordDB: string): Promise<boolean> {
+    const validate = await compare(passworduser, passwordDB);
+    return validate;
   }
 }
