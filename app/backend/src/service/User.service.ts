@@ -2,7 +2,7 @@ import { compare } from 'bcryptjs';
 import createToken from '../utils/jwt';
 import User from '../database/models/UserModel';
 import { ILogin, IUser } from '../interfaces/user.interface';
-import ErrotHttp from '../error/errorHttp';
+import ErrorHttp from '../error/errorHttp';
 import { IServiceResp } from '../interfaces/messageObject.interface';
 
 export default class UserService {
@@ -10,13 +10,14 @@ export default class UserService {
 
   static async getUser(user: ILogin): Promise<IUser> {
     const { email } = user;
+    console.log('entrei no user');
     const [userOk] = await User.findAll({
       where: {
         email,
       },
     });
 
-    if (!userOk) throw new ErrotHttp(400, 'Incorrect email or password');
+    if (!userOk) throw new ErrorHttp(400, 'Incorrect email or password');
 
     return userOk.dataValues;
   }
@@ -24,10 +25,12 @@ export default class UserService {
   static async login(user: ILogin): Promise<IServiceResp<string>> {
     const userOk = await this.getUser(user);
 
-    const validate = this.validatePassword(user.password, userOk.password);
+    const validate = await this.validatePassword(user.password, userOk.password);
+    console.log(validate);
 
     if (!validate) {
-      throw new ErrotHttp(400, 'Incorrect email or password');
+      console.log('erro');
+      throw new ErrorHttp(400, 'Incorrect email or password');
     }
 
     const token = createToken(userOk);
@@ -36,6 +39,7 @@ export default class UserService {
   }
 
   static async validatePassword(passworduser: string, passwordDB: string): Promise<boolean> {
+    console.log('validation senha');
     const validate = await compare(passworduser, passwordDB);
     return validate;
   }
