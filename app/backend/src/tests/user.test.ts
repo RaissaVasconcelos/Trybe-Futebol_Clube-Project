@@ -5,7 +5,7 @@ import chaiHttp = require('chai-http');
 
 import App from '../app';
 import UserModel from '../database/models/UserModel';
-import { user } from './mocks/user.mock.test';
+import { user, senhaInvalid, emailInvalid } from './mocks/user.mock.test';
 
 import { Response } from 'superagent';
 
@@ -39,20 +39,33 @@ describe('Test in Login', () => {
     const response = await chai.request(app).post('/login').send(user.password);
 
     expect(response).to.have.status(400);
-    expect(response.body).to.be.equal('All fields must be filled');
+    expect(response.body.message).to.be.equal('All fields must be filled');
   })
 
   it('Teste Login sem campo de senha', async () => {
     const response = await chai.request(app).post('/login').send(user.email);
 
     expect(response).to.have.status(400);
-    expect(response.body).to.be.equal('All fields must be filled');
+    expect(response.body.message).to.be.equal('All fields must be filled');
+  })
+
+  it('Teste Login com email invalido', async () => {
+    const response = await chai.request(app).post('/login').send(emailInvalid);
+
+    expect(response).to.have.status(401);
+    expect(response.body.message).to.be.equal('Incorrect email or password');
+  })
+
+  it('Testa Login com senha invalida', async () => {
+    const response = await chai.request(app).post('/login').send(senhaInvalid);
+
+    expect(response).to.have.status(401);
+    expect(response.body.message).to.be.equal('Incorrect email or password');
   })
 
   afterEach(()=>{
     (UserModel.findOne as sinon.SinonStub).restore();
   })
-
 });
 
 

@@ -11,10 +11,6 @@ const validationEmailPassword = (user: ILogin): void => {
 };
 
 const validateLogin = (req: Request, _res: Response, next: NextFunction): void => {
-  console.log('validation Login');
-  
-  console.log('user', req.body);
-
   validationEmailPassword(req.body);
 
   next();
