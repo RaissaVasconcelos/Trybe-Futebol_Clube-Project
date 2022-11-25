@@ -6,7 +6,7 @@ import mapError from '../error/mapError';
 
 const validationEmailPassword = (user: ILogin): void => {
   const { error } = schemaUsers.validate(user);
-  console.log('error', error);
+
   if (error) throw new ErrorHttp(mapError(error.message), error.message);
 };
 
