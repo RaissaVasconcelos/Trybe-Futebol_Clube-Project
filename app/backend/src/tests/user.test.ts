@@ -18,7 +18,7 @@ const { expect } = chai;
 describe('Test in Login', () => {
   let chaiHttpResponse: Response;
 
-  before(async () => {
+  beforeEach(async () => {
     sinon
       .stub(UserModel, "findOne")
       .resolves({
@@ -49,7 +49,7 @@ describe('Test in Login', () => {
     expect(response.body).to.be.equal('All fields must be filled');
   })
 
-  after(()=>{
+  afterEach(()=>{
     (UserModel.findOne as sinon.SinonStub).restore();
   })
 

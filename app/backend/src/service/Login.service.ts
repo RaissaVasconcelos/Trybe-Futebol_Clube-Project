@@ -5,7 +5,7 @@ import { ILogin, IUser } from '../interfaces/user.interface';
 import ErrorHttp from '../error/errorHttp';
 import { IServiceResp } from '../interfaces/messageObject.interface';
 
-export default class UserService {
+export default class LoginService {
   public usermodel = new User();
 
   static async getUser(user: ILogin): Promise<IUser> {
@@ -20,6 +20,11 @@ export default class UserService {
     return userOk.dataValues;
   }
 
+  static async validatePassword(passworduser: string, passwordDB: string): Promise<boolean> {
+    const validate = await compare(passworduser, passwordDB);
+    return validate;
+  }
+
   static async login(user: ILogin): Promise<IServiceResp<string>> {
     const userOk = await this.getUser(user);
 
@@ -32,10 +37,5 @@ export default class UserService {
     const token = createToken(userOk);
 
     return { statusCode: 200, message: token };
-  }
-
-  static async validatePassword(passworduser: string, passwordDB: string): Promise<boolean> {
-    const validate = await compare(passworduser, passwordDB);
-    return validate;
   }
 }
