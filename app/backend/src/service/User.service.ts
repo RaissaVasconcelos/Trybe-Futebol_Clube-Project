@@ -9,11 +9,9 @@ export default class UserService {
   public usermodel = new User();
 
   static async getUser(user: ILogin): Promise<IUser> {
-    const { email } = user;
-    console.log('entrei no user');
     const [userOk] = await User.findAll({
       where: {
-        email,
+        email: user.email,
       },
     });
 
@@ -26,10 +24,8 @@ export default class UserService {
     const userOk = await this.getUser(user);
 
     const validate = await this.validatePassword(user.password, userOk.password);
-    console.log(validate);
 
     if (!validate) {
-      console.log('erro');
       throw new ErrorHttp(400, 'Incorrect email or password');
     }
 
@@ -39,7 +35,6 @@ export default class UserService {
   }
 
   static async validatePassword(passworduser: string, passwordDB: string): Promise<boolean> {
-    console.log('validation senha');
     const validate = await compare(passworduser, passwordDB);
     return validate;
   }

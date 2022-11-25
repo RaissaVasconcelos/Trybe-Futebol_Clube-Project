@@ -5,6 +5,7 @@ import chaiHttp = require('chai-http');
 
 import App from '../app';
 import UserModel from '../database/models/UserModel';
+import { user } from './mocks/user.mock.test';
 
 import { Response } from 'superagent';
 
@@ -16,35 +17,35 @@ const { expect } = chai;
 
 describe('Test in Login', () => {
   let chaiHttpResponse: Response;
-  it('Teste create User', async () => {
-    before(async () => {
-      sinon
-        .stub(UserModel, "create")
-        .resolves({
-          username: "Admin",
-          email: "admin@admin.com",
-          password: "D0RQ1N3PAEXQ7HxtLjKPEZBu.PW"
-        } as UserModel);
-    });
 
-  
-    const response = await chai.request(app).post('/login').send({
-            username: "Admin",
-            email: "admin@admin.com",
-            password: "D0RQ1N3PAEXQ7HxtLjKPEZBu.PW"
-          })
-  
-    expect(response.status).to.be.equal(200);
-    expect(response.body).to.be.equal(`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-    .eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjU0NTI3MTg5fQ
-    .XS_9AA82iNoiVaASi0NtJpqOQ_gHSHhxrpIdigiT-fc`);
-  
+  before(async () => {
+    sinon
+      .stub(UserModel, "findOne")
+      .resolves({
+        "email": "admin@admin.com",
+        "password": "secret_admin"
+      } as UserModel);
+  });
 
-    after(()=>{
-      (UserModel.create as sinon.SinonStub).restore();
-    })
-    
+  it('Teste Login', async () => {
+  
+    const response = await chai.request(app).post('/login').send(user);
+  
+    expect(response).to.have.status(200);
+    expect(response.body).to.have.property('token');
   })
+
+  it('Teste Login email invalido', async () => {
+    const response = await chai.request(app).post('/login').send(user.password);
+
+    expect(response).to.have.status(400);
+    expect(response.body).to.be.equal('All fields must be filled');
+  })
+
+  after(()=>{
+    (UserModel.findOne as sinon.SinonStub).restore();
+  })
+
 });
 
 
