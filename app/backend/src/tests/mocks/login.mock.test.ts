@@ -8,7 +8,7 @@ const emailInvalid = {
   password: "secret_admin"
 };
 
-const senhaInvalid = {
+const passwordInvalid = {
   email: "admin@admin.com",
   password: "secret"
 };
@@ -16,5 +16,5 @@ const senhaInvalid = {
 export {
   user,
   emailInvalid,
-  senhaInvalid,
+  passwordInvalid,
 }
