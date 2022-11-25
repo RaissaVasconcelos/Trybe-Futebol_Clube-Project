@@ -7,6 +7,7 @@ const schemaUsers = Joi.object({
     .messages({
       'string.empty': filedsInvalids,
       'any.required': filedsInvalids,
+      'string.email': 'Incorrect email or password',
     }),
   password: Joi.string().min(6).required()
     .messages({

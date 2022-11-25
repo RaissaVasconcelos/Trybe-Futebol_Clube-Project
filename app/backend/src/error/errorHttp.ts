@@ -6,12 +6,6 @@ export enum HttpCode {
   NOT_FOUND = 404,
   INTERNAL_SERVER_ERROR = 500,
 }
-
-// interface AppErrorsArgs {
-//   statusCode: number;
-//   message: string;
-// }
-
 export default class ErrorHttp extends Error {
   public readonly statusCode: HttpCode;
   public readonly message: string;

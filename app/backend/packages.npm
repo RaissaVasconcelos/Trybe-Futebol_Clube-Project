@@ -1,4 +1,4 @@
 joi
-boom
 jwt
 express-async-errors
+@types-joi

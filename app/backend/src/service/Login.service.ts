@@ -2,7 +2,7 @@ import { compare } from 'bcryptjs';
 import createToken from '../utils/jwt';
 import User from '../database/models/UserModel';
 import { ILogin, IUser } from '../interfaces/user.interface';
-import ErrorHttp from '../error/errorHttp';
+import ErrorHttp, { HttpCode } from '../error/errorHttp';
 import { IServiceResp } from '../interfaces/messageObject.interface';
 
 export default class LoginService {
@@ -15,7 +15,7 @@ export default class LoginService {
       },
     });
 
-    if (!userOk) throw new ErrorHttp(400, 'Incorrect email or password');
+    if (!userOk) throw new ErrorHttp(HttpCode.UNAUTHORIZED, 'Incorrect email or password');
 
     return userOk.dataValues;
   }
@@ -31,7 +31,7 @@ export default class LoginService {
     const validate = await this.validatePassword(user.password, userOk.password);
 
     if (!validate) {
-      throw new ErrorHttp(400, 'Incorrect email or password');
+      throw new ErrorHttp(HttpCode.UNAUTHORIZED, 'Incorrect email or password');
     }
 
     const token = createToken(userOk);
