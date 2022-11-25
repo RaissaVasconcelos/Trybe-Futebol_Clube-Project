@@ -14,4 +14,6 @@ RUN npm install
 # copiar todas as novas dependencias neste app
 COPY . .
 
-CMD ["npm", "start"]
+ENTRYPOINT ["npm", "run"]
+
+CMD [ "dev" ]
