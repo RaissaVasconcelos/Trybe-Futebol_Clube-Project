@@ -35,8 +35,15 @@ describe('Test in Login', () => {
     expect(response.body).to.have.property('token');
   })
 
-  it('Teste Login email invalido', async () => {
+  it('Teste Login sem campo de email', async () => {
     const response = await chai.request(app).post('/login').send(user.password);
+
+    expect(response).to.have.status(400);
+    expect(response.body).to.be.equal('All fields must be filled');
+  })
+
+  it('Teste Login sem campo de senha', async () => {
+    const response = await chai.request(app).post('/login').send(user.email);
 
     expect(response).to.have.status(400);
     expect(response.body).to.be.equal('All fields must be filled');

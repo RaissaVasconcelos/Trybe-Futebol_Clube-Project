@@ -2,6 +2,7 @@ import 'express-async-errors';
 import * as express from 'express';
 import UserController from './controllers/User.controller';
 import erroMiddleware from './midlewares/error.midleware';
+import validateUser from './midlewares/user.validation.midleware';
 
 class App {
   public app: express.Express;
