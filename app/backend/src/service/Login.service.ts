@@ -6,8 +6,6 @@ import ErrorHttp, { HttpCode } from '../error/errorHttp';
 import { IServiceResp } from '../interfaces/messageObject.interface';
 
 export default class LoginService {
-  public usermodel = new User();
-
   static async getUser(user: ILogin): Promise<IUser> {
     const [userOk] = await User.findAll({
       where: {
