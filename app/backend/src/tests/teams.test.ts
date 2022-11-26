@@ -21,16 +21,14 @@ describe('Test in Teams', () => {
     sinon
       .stub(TeamsModel, "findAll")
       .resolves(teams as TeamsModel[]);
-  });
-
-  it('Get all teams', async () => {
-    const result = await chai.request(app).get('/teams');
-    console.log('result', result);
+    });
     
-    // expect(result).to.be.an('array');
+    it('Get all teams', async () => {
+    const result = await chai.request(app).get('/teams');
+    
     expect(result).to.have.status(200);
     expect(result.body).to.be.an('array');
-    expect(result.text).to.equal(teams);
+    expect(result.body).to.deep.equal(teams);
   })
 
   afterEach(()=>{

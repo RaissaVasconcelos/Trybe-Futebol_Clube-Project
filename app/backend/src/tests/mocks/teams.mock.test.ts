@@ -1,52 +1,68 @@
 const teams = [
   {
-    teamName: 'Avaí/Kindermann',
+    id: 1,
+    teamName: "Avaí/Kindermann"
   },
   {
-    teamName: 'Bahia',
+    id: 2,
+    teamName: "Bahia"
   },
   {
-    teamName: 'Botafogo',
+    id: 3,
+    teamName: "Botafogo"
   },
   {
-    teamName: 'Corinthians',
+    id: 4,
+    teamName: "Corinthians"
   },
   {
-    teamName: 'Cruzeiro',
+    id: 5,
+    teamName: "Cruzeiro"
   },
   {
-    teamName: 'Ferroviária',
+    id: 6,
+    teamName: "Ferroviária"
   },
   {
-    teamName: 'Flamengo',
+    id: 7,
+    teamName: "Flamengo"
   },
   {
-    teamName: 'Grêmio',
+    id: 8,
+    teamName: "Grêmio"
   },
   {
-    teamName: 'Internacional',
+    id: 9,
+    teamName: "Internacional"
   },
   {
-    teamName: 'Minas Brasília',
+    id: 10,
+    teamName: "Minas Brasília"
   },
   {
-    teamName: 'Napoli-SC',
+    id: 11,
+    teamName: "Napoli-SC"
   },
   {
-    teamName: 'Palmeiras',
+    id: 12,
+    teamName: "Palmeiras"
   },
   {
-    teamName: 'Real Brasília',
+    id: 13,
+    teamName: "Real Brasília"
   },
   {
-    teamName: 'Santos',
+    id: 14,
+    teamName: "Santos"
   },
   {
-    teamName: 'São José-SP',
+    id: 15,
+    teamName: "São José-SP"
   },
   {
-    teamName: 'São Paulo',
-  },
+    id: 16,
+    teamName: "São Paulo"
+  }
 ]
 
 export default teams;
