@@ -8,4 +8,9 @@ export default class TeamsService {
     const result = await Teams.findAll();
     return { statusCode: HttpCode.OK, message: result };
   }
+
+  static async getById(id: number): Promise<IServiceResp<teams>> {
+    const [result] = await Teams.findAll({ where: { id } });
+    return { statusCode: HttpCode.OK, message: result };
+  }
 }
