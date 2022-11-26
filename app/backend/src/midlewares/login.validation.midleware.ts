@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ILogin } from '../interfaces/user.interface';
 import ErrorHttp from '../error/errorHttp';
-import schemaUsers from '../utils/schema.joi';
+import { schemaUsers } from '../utils/schema.joi';
 import mapError from '../error/mapError';
 
 const validationEmailPassword = (user: ILogin): void => {

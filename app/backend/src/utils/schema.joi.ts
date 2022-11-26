@@ -2,6 +2,8 @@ import * as Joi from 'joi';
 
 const filedsInvalids = 'All fields must be filled';
 
+const schemaId = Joi.number().integer().required();
+
 const schemaUsers = Joi.object({
   email: Joi.string().email().min(3).required()
     .messages({
@@ -16,4 +18,7 @@ const schemaUsers = Joi.object({
     }),
 });
 
-export default schemaUsers;
+export {
+  schemaUsers,
+  schemaId,
+};
