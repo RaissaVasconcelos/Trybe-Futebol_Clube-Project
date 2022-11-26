@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '.';
-// import OtherModel from './OtherModel';
 
 class Matches extends Model {
   // declare <campo>: <tipo>;
@@ -46,7 +45,6 @@ Matches.init({
     type: DataTypes.BOOLEAN,
   },
 }, {
-  // ... Outras configs
   underscored: true,
   sequelize: db,
   modelName: 'matches',

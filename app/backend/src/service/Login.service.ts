@@ -15,7 +15,7 @@ export default class LoginService {
       },
     });
 
-    if (!userOk) throw new ErrorHttp(HttpCode.UNAUTHORIZED, 'Incorrect email or password');
+    // if (!userOk) throw new ErrorHttp(HttpCode.UNAUTHORIZED, 'Incorrect email or password');
 
     return userOk.dataValues;
   }
