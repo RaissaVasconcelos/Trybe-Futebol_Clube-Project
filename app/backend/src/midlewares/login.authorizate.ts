@@ -7,9 +7,11 @@ const authorizateUser = (req: Request, res: Response, next: NextFunction): void 
 
   if (!authorizateUser) throw new ErrorHttp(HttpCode.UNAUTHORIZED, 'Token not found');
 
-  const user = validatedToken(authorization as string);
+  const { type, message } = validatedToken(authorization as string);
 
-  req.body.user = user;
+  if (type) throw new ErrorHttp(HttpCode.UNAUTHORIZED, 'Token must be a valid token');
+
+  req.body.user = message;
 
   next();
 };
