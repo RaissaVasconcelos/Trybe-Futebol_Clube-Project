@@ -88,6 +88,18 @@ describe('Salve in Matches', async () => {
     })
   })
 
+  it('Test in Teams is not equals', async () => {
+    const result = await chai.request(app).post('/matches').send({
+      "homeTeam": 16,
+      "awayTeam": 16,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 2,
+    })
+
+    expect(result).to.have.status(404);
+    expect(result.body.message).to.deep.equal('There is no team with such id!');
+  })
+
   afterEach(() => {
     (MatchesModel.create as sinon.SinonStub).restore();
   })
