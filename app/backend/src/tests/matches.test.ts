@@ -96,8 +96,8 @@ describe('Salve in Matches', async () => {
       "awayTeamGoals": 2,
     })
 
-    expect(result).to.have.status(404);
-    expect(result.body.message).to.deep.equal('There is no team with such id!');
+    expect(result).to.have.status(422);
+    expect(result.body.message).to.deep.equal('It is not possible to create a match with two equal teams');
   })
 
   afterEach(() => {
