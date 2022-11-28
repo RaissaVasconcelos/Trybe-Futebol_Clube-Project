@@ -56,3 +56,32 @@ describe('Test in Matches inProgress', () => {
     (MatchesModel.findAll as sinon.SinonStub).restore();
   })
 })
+
+describe('Salve in Matches', async () => {
+  beforeEach(async () => {
+    sinon.stub(MatchesModel, 'create')
+    .resolves(matches as unknown as MatchesModel)
+  })
+
+  it('Salve matches inProgress true', async () => {
+    const result = await chai.request(app).post('/matches').send({
+      "homeTeam": 16,
+      "awayTeam": 8,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 2,
+    })
+    expect(result).to.have.status(201);
+    expect(result.body).to.deep.equal({
+      "id": 1,
+      "homeTeam": 16,
+      "homeTeamGoals": 2,
+      "awayTeam": 8,
+      "awayTeamGoals": 2,
+      "inProgress": true,
+    })
+  })
+
+  afterEach(() => {
+    (MatchesModel.create as sinon.SinonStub).restore();
+  })
+})
