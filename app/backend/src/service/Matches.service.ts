@@ -2,7 +2,7 @@ import { IServiceResp } from '../interfaces/messageObject.interface';
 import Matches from '../database/models/MatchesModel';
 import Teams from '../database/models/TeamsModel';
 import { HttpCode } from '../error/errorHttp';
-import IMatches from '../interfaces/matches.interface';
+import IMatches, { IMatchesCreate } from '../interfaces/matches.interface';
 
 export default class MatchesService {
   static async getAllMatches(): Promise<IServiceResp<IMatches[]>> {
@@ -38,5 +38,13 @@ export default class MatchesService {
     });
 
     return { statusCode: HttpCode.OK, message: result };
+  }
+
+  static async createMatches(value: IMatchesCreate): Promise<IServiceResp<IMatches>> {
+    const result = await Matches.create({
+      ...value, inProgress: true,
+    });
+    console.log('result', result);
+    return { statusCode: HttpCode.CREATE, message: result };
   }
 }

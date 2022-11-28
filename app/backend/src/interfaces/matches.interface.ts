@@ -2,12 +2,14 @@ export interface IteamHome {
   teamName: string;
 }
 
-export default interface IMatches {
-  id?: number,
+export interface IMatchesCreate {
   homeTeam: number,
-  homeTeamGoals: number,
   awayTeam: number,
+  homeTeamGoals: number,
   awayTeamGoals: number,
+}
+export default interface IMatches extends IMatchesCreate {
+  id?: number,
   inProgress: boolean,
   teamHome?: IteamHome;
   teamAway?: IteamHome;

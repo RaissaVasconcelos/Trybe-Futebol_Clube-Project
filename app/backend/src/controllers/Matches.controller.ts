@@ -11,4 +11,9 @@ export default class MatchesControlles {
     const { statusCode, message } = await MachesService.getAllMatches();
     res.status(statusCode).json(message);
   }
+
+  static async createMatches(req: Request, res: Response): Promise<void> {
+    const { statusCode, message } = await MachesService.createMatches(req.body);
+    res.status(statusCode).json(message);
+  }
 }
