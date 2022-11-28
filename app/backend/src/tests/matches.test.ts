@@ -91,4 +91,22 @@ describe('Salve in Matches', async () => {
   afterEach(() => {
     (MatchesModel.create as sinon.SinonStub).restore();
   })
+
+  describe('Finish Matches with inProgress is true', () => {
+    beforeEach(async () => {
+      sinon.stub(MatchesModel, 'findAll')
+      .resolves(matches as unknown as MatchesModel[])
+    })
+
+    it('Finish Matches', async () => {
+      const result = await chai.request(app).patch('/matches/:id/finish')
+
+      expect(result).to.have.status(200);
+      expect(result.body).to.deep.equal('Finished');
+    })
+    
+    afterEach(() => {
+      (MatchesModel.findAll as sinon.SinonStub).restore();
+    })
+  })
 })
