@@ -133,4 +133,28 @@ describe('Salve in Matches', async () => {
       (MatchesModel.findAll as sinon.SinonStub).restore();
     })
   })
+
+  describe('Update Matches with inProgress is true', () => {
+    beforeEach(async () => {
+      sinon.stub(MatchesModel, 'findAll')
+      .resolves(matches as unknown as MatchesModel[])
+    })
+
+    it('Update Matches', async () => {
+      const result = await chai.request(app).patch('/matches/:id').send({
+          "homeTeamGoals": 3,
+          "awayTeamGoals": 1
+      })
+
+      expect(result).to.have.status(200);
+      expect(result.body.message).to.deep.include({
+        "homeTeamGoals": 3,
+        "awayTeamGoals": 1,
+      });
+    })
+    
+    afterEach(() => {
+      (MatchesModel.findAll as sinon.SinonStub).restore();
+    })
+  })
 })
