@@ -25,16 +25,33 @@ describe('Test in Matches', () => {
 
     expect(result).to.have.status(200);
     expect(result.body).to.be.an('array');
-    expect(result).to.deep.include(matches)
+    expect(result.body).to.deep.equal(matches)
   })
 
+  
+  afterEach(() => {
+    (MatchesModel.findAll as sinon.SinonStub).restore();
+  })
+})
+
+describe('Test in Matches inProgress', () => {
+  beforeEach(async () => {
+    sinon.stub(MatchesModel, 'findAll')
+    .resolves(matchesInProgressTrue as unknown as MatchesModel[])
+  })
   it('Get all Mathes in inProgress true', async () => {
     const result = await chai.request(app).get('/matches?inProgress=true');
-
+  
     expect(result).to.have.status(200);
-    expect(result).to.deep.include( expect(result).to.deep.include(matchesInProgressTrue))
+    expect(result.body).to.deep.equal(matchesInProgressTrue);
   })
 
+  it('Get All Mathes in inProgress false', async () => {
+    const result = await chai.request(app).get('/matches?inProgress=false');
+  
+    expect(result).to.have.status(200);
+    expect(result.body).to.not.equal(matchesInProgressTrue);
+  })
   afterEach(() => {
     (MatchesModel.findAll as sinon.SinonStub).restore();
   })
