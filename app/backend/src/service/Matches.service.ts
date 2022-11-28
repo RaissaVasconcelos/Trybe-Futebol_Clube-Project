@@ -46,4 +46,9 @@ export default class MatchesService {
     });
     return { statusCode: HttpCode.CREATE, message: result };
   }
+
+  static async matchesFinish(id: number): Promise<IServiceResp<string>> {
+    await Matches.update({ inProgress: false }, { where: { id } });
+    return { statusCode: HttpCode.OK, message: 'Finished' };
+  }
 }
