@@ -100,6 +100,18 @@ describe('Salve in Matches', async () => {
     expect(result.body.message).to.deep.equal('It is not possible to create a match with two equal teams');
   })
 
+  it('Test is not create Matches with Teams that do not exist', async () => {
+    const result = await chai.request(app).post('/matches').send({
+      "homeTeam": 100,
+      "awayTeam": 16,
+      "homeTeamGoals": 2,
+      "awayTeamGoals": 2,
+    })
+
+    expect(result).to.have.status(404);
+    expect(result.body.message).to.deep.equal('There is no team with such id!');
+  });
+
   afterEach(() => {
     (MatchesModel.create as sinon.SinonStub).restore();
   })
