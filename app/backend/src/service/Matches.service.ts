@@ -3,7 +3,7 @@ import { IServiceResp } from '../interfaces/messageObject.interface';
 import Matches from '../database/models/MatchesModel';
 import Teams from '../database/models/TeamsModel';
 import ErrorHttp, { HttpCode } from '../error/errorHttp';
-import IMatches, { IMatchesCreate } from '../interfaces/matches.interface';
+import IMatches, { IMatchesCreate, IMatchesupdate } from '../interfaces/matches.interface';
 
 export default class MatchesService {
   static async getAllMatches(): Promise<IServiceResp<IMatches[]>> {
@@ -41,6 +41,11 @@ export default class MatchesService {
     return { statusCode: HttpCode.OK, message: result };
   }
 
+  static async getByIdMatches(id: number): Promise<IServiceResp<IMatches>> {
+    const result = await Matches.findAll({ where: { id } });
+    return { statusCode: HttpCode.OK, message: result };
+  }
+
   static async createMatches(matches: IMatchesCreate): Promise<IServiceResp<IMatches>> {
     await this.validateCreate(matches);
     const result = await Matches.create({
@@ -66,6 +71,16 @@ export default class MatchesService {
     if (result.length === 0) {
       throw new ErrorHttp(HttpCode.NOT_FOUND, 'There is no team with such id!');
     }
+  }
+
+  static async updateMatches(id: number, matches: IMatchesupdate): Promise<IServiceResp<IMatches>> {
+    await Matches.update({ ...matches }, {
+      where: { id },
+    });
+
+    const updatedMatche = await this.getByIdMatches(id);
+
+    return { statusCode: HttpCode.OK, message: updatedMatche.message };
   }
 }
 

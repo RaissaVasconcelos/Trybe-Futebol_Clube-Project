@@ -22,4 +22,10 @@ export default class MatchesControlles {
     const { statusCode, message } = await MachesService.matchesFinish(Number(id));
     res.status(statusCode).json({ message });
   }
+
+  static async matchesUpdate(req: Request, res: Response): Promise<void> {
+    const { id } = req.params;
+    const { statusCode, message } = await MachesService.updateMatches(Number(id), req.body);
+    res.status(statusCode).json(message);
+  }
 }
