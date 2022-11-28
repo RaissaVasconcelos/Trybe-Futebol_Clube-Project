@@ -40,11 +40,10 @@ export default class MatchesService {
     return { statusCode: HttpCode.OK, message: result };
   }
 
-  static async createMatches(value: IMatchesCreate): Promise<IServiceResp<IMatches>> {
+  static async createMatches(matches: IMatchesCreate): Promise<IServiceResp<IMatches>> {
     const result = await Matches.create({
-      ...value, inProgress: true,
+      ...matches, inProgress: true,
     });
-    console.log('result', result);
     return { statusCode: HttpCode.CREATE, message: result };
   }
 }

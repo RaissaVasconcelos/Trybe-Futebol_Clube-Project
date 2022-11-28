@@ -60,7 +60,14 @@ describe('Test in Matches inProgress', () => {
 describe('Salve in Matches', async () => {
   beforeEach(async () => {
     sinon.stub(MatchesModel, 'create')
-    .resolves(matches as unknown as MatchesModel)
+    .resolves({
+      id: 49,
+      homeTeam: 16,
+      homeTeamGoals: 2,
+      awayTeam: 8,
+      awayTeamGoals: 2,
+      inProgress: true,
+    } as unknown as MatchesModel)
   })
 
   it('Salve matches inProgress true', async () => {
@@ -72,12 +79,12 @@ describe('Salve in Matches', async () => {
     })
     expect(result).to.have.status(201);
     expect(result.body).to.deep.equal({
-      "id": 1,
-      "homeTeam": 16,
-      "homeTeamGoals": 2,
-      "awayTeam": 8,
-      "awayTeamGoals": 2,
-      "inProgress": true,
+      id: 49,
+      homeTeam: 16,
+      homeTeamGoals: 2,
+      awayTeam: 8,
+      awayTeamGoals: 2,
+      inProgress: true,
     })
   })
 
