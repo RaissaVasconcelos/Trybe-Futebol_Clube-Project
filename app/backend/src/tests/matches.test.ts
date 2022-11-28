@@ -102,7 +102,7 @@ describe('Salve in Matches', async () => {
       const result = await chai.request(app).patch('/matches/:id/finish')
 
       expect(result).to.have.status(200);
-      expect(result.body).to.deep.equal('Finished');
+      expect(result.body.message).to.deep.equal('Finished');
     })
     
     afterEach(() => {
