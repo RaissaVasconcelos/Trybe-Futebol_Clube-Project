@@ -1,7 +1,8 @@
+// import { Op } from 'sequelize';
 import { IServiceResp } from '../interfaces/messageObject.interface';
 import Matches from '../database/models/MatchesModel';
 import Teams from '../database/models/TeamsModel';
-import { HttpCode } from '../error/errorHttp';
+import ErrorHttp, { HttpCode } from '../error/errorHttp';
 import IMatches, { IMatchesCreate } from '../interfaces/matches.interface';
 
 export default class MatchesService {
@@ -41,6 +42,7 @@ export default class MatchesService {
   }
 
   static async createMatches(matches: IMatchesCreate): Promise<IServiceResp<IMatches>> {
+    await this.validateCreate(matches);
     const result = await Matches.create({
       ...matches, inProgress: true,
     });
@@ -51,4 +53,24 @@ export default class MatchesService {
     await Matches.update({ inProgress: false }, { where: { id } });
     return { statusCode: HttpCode.OK, message: 'Finished' };
   }
+
+  static async validateCreate(matches: IMatchesCreate): Promise<void> {
+    const { homeTeam, awayTeam } = matches;
+    await this.validateTeam(homeTeam);
+    await this.validateTeam(awayTeam);
+  }
+
+  static async validateTeam(id: number): Promise<void> {
+    const result = await Teams.findAll({ where: { id } });
+
+    if (result.length === 0) {
+      throw new ErrorHttp(HttpCode.NOT_FOUND, 'There is no team with such id!');
+    }
+  }
 }
+
+// const result = await Teams.findAll({
+//     where: {
+//       [Op.and]: [{ id: awayTeam }, { id: homeTeam }],
+//     }
+// });
