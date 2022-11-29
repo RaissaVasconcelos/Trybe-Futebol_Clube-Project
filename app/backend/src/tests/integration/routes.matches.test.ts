@@ -1,12 +1,15 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
+import * as jwt from 'jsonwebtoken';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
-import App from '../app';
-import MatchesModel from '../database/models/MatchesModel';
+import App from '../../app';
+import MatchesModel from '../../database/models/MatchesModel';
 
-import { matches, matchesInProgressTrue } from './mocks/matches.mock.test';
+import { matches, matchesInProgressTrue } from '../mocks/matches.mock.test';
+
+import authorizateUser from '../../utils/jwt.validation';
 
 chai.use(chaiHttp);
 
@@ -59,6 +62,7 @@ describe('Test in Matches inProgress', () => {
 
 describe('Salve in Matches', async () => {
   beforeEach(async () => {
+    sinon.stub(jwt, 'verify').resolves({ id: 1 })
     sinon.stub(MatchesModel, 'create')
     .resolves({
       id: 49,
@@ -114,47 +118,46 @@ describe('Salve in Matches', async () => {
 
   afterEach(() => {
     (MatchesModel.create as sinon.SinonStub).restore();
+    (jwt.verify as sinon.SinonStub).restore();
+  })
+})
+
+describe('Finish Matches with inProgress is true', () => {
+  beforeEach(async () => {
+    sinon.stub(MatchesModel, 'findAll')
+    .resolves(matches as unknown as MatchesModel[])
   })
 
-  describe('Finish Matches with inProgress is true', () => {
-    beforeEach(async () => {
-      sinon.stub(MatchesModel, 'findAll')
-      .resolves(matches as unknown as MatchesModel[])
-    })
+  it('Finish Matches', async () => {
+    const result = await chai.request(app).patch('/matches/:id/finish')
 
-    it('Finish Matches', async () => {
-      const result = await chai.request(app).patch('/matches/:id/finish')
+    expect(result).to.have.status(200);
+    expect(result.body.message).to.deep.equal('Finished');
+  })
+  
+  afterEach(() => {
+    (MatchesModel.findAll as sinon.SinonStub).restore();
+  })
+})
 
-      expect(result).to.have.status(200);
-      expect(result.body.message).to.deep.equal('Finished');
-    })
-    
-    afterEach(() => {
-      (MatchesModel.findAll as sinon.SinonStub).restore();
-    })
+describe('Update Matches with inProgress is true', () => {
+  beforeEach(async () => {
+    sinon.stub(MatchesModel, 'findAll')
+    .resolves(matches[0] as unknown as MatchesModel[])
   })
 
-  describe('Update Matches with inProgress is true', () => {
-    beforeEach(async () => {
-      sinon.stub(MatchesModel, 'findAll')
-      .resolves(matches as unknown as MatchesModel[])
-    })
-
-    it('Update Matches', async () => {
-      const result = await chai.request(app).patch('/matches/:id').send({
-          "homeTeamGoals": 3,
-          "awayTeamGoals": 1
-      })
-
-      expect(result).to.have.status(200);
-      expect(result.body.message).to.deep.include({
+  it('Update Matches', async () => {
+    const result = await chai.request(app).patch('/matches/1').send({
         "homeTeamGoals": 3,
-        "awayTeamGoals": 1,
-      });
+        "awayTeamGoals": 1
     })
-    
-    afterEach(() => {
-      (MatchesModel.findAll as sinon.SinonStub).restore();
-    })
+
+    expect(result).to.have.status(200);
+    expect(result.body).to.have.property('homeTeamGoals');
+    expect(result.body).to.have.property('awayTeamGoals');
+  })
+
+  afterEach(() => {
+    (MatchesModel.findAll as sinon.SinonStub).restore();
   })
 })

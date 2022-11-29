@@ -3,10 +3,10 @@ import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
-import App from '../app';
-import TeamsModel from '../database/models/TeamsModel';
+import App from '../../app';
+import TeamsModel from '../../database/models/TeamsModel';
 
-import teams from './mocks/teams.mock.test';
+import teams from '../mocks/teams.mock.test';
 
 chai.use(chaiHttp);
 
