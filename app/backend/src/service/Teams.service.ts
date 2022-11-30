@@ -16,4 +16,16 @@ export default class TeamsService {
 
     return { statusCode: HttpCode.OK, message: result };
   }
+
+  static async nameTeam(id: number): Promise<string> {
+    const [result] = await Teams.findAll({ where: { id } });
+    return result.teamName;
+  }
+
+  static async idTeam(): Promise<ITeams[]> {
+    const result = await Teams.findAll({
+      attributes: ['id'],
+    });
+    return result;
+  }
 }

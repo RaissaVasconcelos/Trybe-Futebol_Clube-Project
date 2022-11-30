@@ -1,74 +1,64 @@
 import { IServiceResp } from '../interfaces/messageObject.interface';
-// import ILeaderBoard from '../interfaces/leaderboard.interface';
+import ILeaderBoard from '../interfaces/leaderboard.interface';
 import { HttpCode } from '../error/errorHttp';
 import Matches from '../database/models/MatchesModel';
 import IMatches from '../interfaces/matches.interface';
+import TeamsService from './Teams.service';
 
 export default class ServiceLeaderBoard {
-  static async getAllLeaderboard(): Promise<IServiceResp<string>> {
-    const array = await this.getTimeHome();
-    const arrayNovo = array.reduce((acc, curr) => {
-      acc.goalsFavor += curr.homeTeamGoals;
-      acc.totalGames += 1;
-      acc.goalsOwn += curr.awayTeamGoals;
-      acc.goalsBalance = acc.goalsFavor - acc.goalsOwn;
-      return acc;
-    }, {
-      name: 'Santos',
-      totalPoints: await this.calculatePontuation(),
-      totalGames: 0,
-      totalVictories: await this.calculatesVictory(),
-      totalDraws: await this.calculatesDraws(),
-      goalsFavor: 0,
-      goalsOwn: 0,
-      goalsBalance: 0 });
-    console.log('reduce', arrayNovo);
-    return { statusCode: HttpCode.OK, message: 'ok' };
+  static async getAllLeaderboard(): Promise<IServiceResp<ILeaderBoard>> {
+    const teamsAll = await TeamsService.idTeam();
+    // retorna um array de times no formato do ReturnObject
+    const arrays = teamsAll.map(({ id }) => this.getTimeHome(id));
+    console.log(arrays);
+    // retorna no formato do ReturnObject
+    const array = await this.getTimeHome(14);
+    console.log('reduce', array);
+    return { statusCode: HttpCode.OK, message: array };
   }
 
-  static async getTimeHome(): Promise<unknown[]> {
-    const indexHomeTeam = 14;
-    const result = await Matches.findAll({ where: { inProgress: 0 } });
-    const array = result.map(({ dataValues }) => dataValues)
-      .filter(({ homeTeam }) => homeTeam === indexHomeTeam)
-      .reduce((acc, curr) => {
-        acc.goalsFavor += curr.homeTeamGoals;
-        acc.totalGames += 1;
-        acc.goalsOwn += curr.awayTeamGoals;
-        acc.goalsBalance = acc.goalsFavor - acc.goalsOwn;
-        return acc;
-      }, {});
-    return array;
+  static returnsObject(array: IMatches[]): ILeaderBoard {
+    const objectReduce = {
+      // name: await TeamsService.nameTeam(array[0].homeTeam),
+      totalPoints: this.calculatePontuation(array),
+      totalGames: this.totalGames(array),
+      totalVictories: this.calculatesVictory(array),
+      totalDraws: this.calculatesDraws(array),
+      totalLosses: this.calculateLosses(array),
+      goalsFavor: this.goalsFavor(array),
+      goalsOwn: this.goalsOnw(array),
+      goalsBalance: this.goalsFavor(array) - this.goalsOnw(array),
+      efficiency: this.calculatEefficiency(array),
+    };
+    return objectReduce;
   }
 
-  static async cbreduce(value: object): Promise<object> {
-    const red = value.reduce((acc, curr) => {
-      console.log(curr);
-      return acc;
-    });
-    console.log(red);
-    return {};
+  static async getTimeHome(indexHomeTeam: number): Promise<ILeaderBoard> {
+    const matchesAllsFinish = await Matches.findAll({ where: { inProgress: 0 } });
+
+    const arrayTeamFilter = matchesAllsFinish.map(({ dataValues }) => dataValues)
+      .filter(({ homeTeam }) => homeTeam === indexHomeTeam);
+
+    const objectLeaderboard = this.returnsObject(arrayTeamFilter);
+    return objectLeaderboard;
   }
 
-  static async calculatePontuation(): Promise<number> {
-    const array = await this.getTimeHome();
-    const pontuations = array.reduce((acc, curr) => {
-      if (curr.homeTeamGoals > curr.awayTeamGoals) {
+  static calculatePontuation(array: IMatches[]): number {
+    const pontuations = array.reduce((acc, { homeTeamGoals, awayTeamGoals }) => {
+      if (homeTeamGoals > awayTeamGoals) {
         return acc + 3;
       }
-      if (curr.homeTeamGoals === curr.awayTeamGoals) {
+      if (homeTeamGoals === awayTeamGoals) {
         return acc + 1;
       }
       return acc;
     }, 0);
-
     return pontuations;
   }
 
-  static async calculatesVictory(): Promise<number> {
-    const array = await this.getTimeHome();
-    const totalVitory = array.reduce((acc, curr) => {
-      if (curr.homeTeamGoals > curr.awayTeamGoals) {
+  static calculatesVictory(array: IMatches[]): number {
+    const totalVitory = array.reduce((acc, { homeTeamGoals, awayTeamGoals }) => {
+      if (homeTeamGoals > awayTeamGoals) {
         return acc + 1;
       }
       return acc;
@@ -76,14 +66,43 @@ export default class ServiceLeaderBoard {
     return totalVitory;
   }
 
-  static async calculatesDraws(): Promise<number> {
-    const array = await this.getTimeHome();
-    const totalDraws = array.reduce((acc, curr) => {
-      if (curr.homeTeamGoals === curr.awayTeamGoals) {
+  static calculatesDraws(array: IMatches[]): number {
+    const totalDraws = array.reduce((acc, { homeTeamGoals, awayTeamGoals }) => {
+      if (homeTeamGoals === awayTeamGoals) {
         return acc + 1;
       }
       return acc;
     }, 0);
     return totalDraws;
+  }
+
+  static calculateLosses(array: IMatches[]): number {
+    const totalLosses = array.reduce((acc, { homeTeamGoals, awayTeamGoals }) => {
+      if (homeTeamGoals < awayTeamGoals) {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
+    return totalLosses;
+  }
+
+  static totalGames(array: IMatches[]): number {
+    const totalGames = array.reduce((acc, _curr) => acc + 1, 0);
+    return totalGames;
+  }
+
+  static goalsFavor(array: IMatches[]): number {
+    const totalGoalsfavor = array.reduce((acc, { homeTeamGoals }) => acc + homeTeamGoals, 0);
+    return totalGoalsfavor;
+  }
+
+  static goalsOnw(array: IMatches[]): number {
+    const totalGoalsOwn = array.reduce((acc, { awayTeamGoals }) => acc + awayTeamGoals, 0);
+    return totalGoalsOwn;
+  }
+
+  static calculatEefficiency(array: IMatches[]): string {
+    const efficiency = (this.calculatePontuation(array) / (this.totalGames(array) * 3)) * 100;
+    return efficiency.toFixed(2);
   }
 }
