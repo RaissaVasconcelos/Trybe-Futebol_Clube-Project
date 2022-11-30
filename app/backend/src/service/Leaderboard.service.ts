@@ -8,18 +8,14 @@ import TeamsService from './Teams.service';
 export default class ServiceLeaderBoard {
   static async getAllLeaderboard(): Promise<IServiceResp<ILeaderBoard>> {
     const teamsAll = await TeamsService.idTeam();
-    // retorna um array de times no formato do ReturnObject
-    const arrays = teamsAll.map(({ id }) => this.getTimeHome(id));
-    console.log(arrays);
-    // retorna no formato do ReturnObject
-    const array = await this.getTimeHome(14);
-    console.log('reduce', array);
-    return { statusCode: HttpCode.OK, message: array };
+    const arrays = await Promise.all(teamsAll.map(async ({ id }) => this.getTimeHome(id)));
+    const orderned = this.orderTeamsLeaderboard(arrays);
+    return { statusCode: HttpCode.OK, message: orderned };
   }
 
-  static returnsObject(array: IMatches[]): ILeaderBoard {
+  static async returnsObject(array: IMatches[]): Promise<ILeaderBoard> {
     const objectReduce = {
-      // name: await TeamsService.nameTeam(array[0].homeTeam),
+      name: await TeamsService.nameTeam(array[0].homeTeam),
       totalPoints: this.calculatePontuation(array),
       totalGames: this.totalGames(array),
       totalVictories: this.calculatesVictory(array),
@@ -33,13 +29,23 @@ export default class ServiceLeaderBoard {
     return objectReduce;
   }
 
+  static orderTeamsLeaderboard(array: ILeaderBoard[]): ILeaderBoard[] {
+    const orderTeams = array.sort((a, b) => b.totalPoints - a.totalPoints
+      || b.totalVictories - a.totalVictories
+      || b.goalsBalance - a.goalsBalance
+      || b.goalsFavor - a.goalsFavor
+      || b.goalsOwn - a.goalsOwn);
+    return orderTeams;
+  }
+
   static async getTimeHome(indexHomeTeam: number): Promise<ILeaderBoard> {
     const matchesAllsFinish = await Matches.findAll({ where: { inProgress: 0 } });
 
     const arrayTeamFilter = matchesAllsFinish.map(({ dataValues }) => dataValues)
       .filter(({ homeTeam }) => homeTeam === indexHomeTeam);
 
-    const objectLeaderboard = this.returnsObject(arrayTeamFilter);
+    const objectLeaderboard = await this.returnsObject(arrayTeamFilter);
+
     return objectLeaderboard;
   }
 
