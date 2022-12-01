@@ -3,7 +3,8 @@ import Leaderboard from '../service/Leaderboard.service';
 
 export default class LeaderboardController {
   static async getAll(req: Request, res: Response) {
-    const { statusCode, message } = await Leaderboard.getAllLeaderboard();
+    const path = req.path.replace('/', '');
+    const { statusCode, message } = await Leaderboard.getAllLeaderboard(path);
     res.status(statusCode).json(message);
   }
 }
