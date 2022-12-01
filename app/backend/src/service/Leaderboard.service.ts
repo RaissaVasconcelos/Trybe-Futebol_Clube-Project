@@ -14,24 +14,24 @@ export default class ServiceLeaderBoard {
     // const arrays = await Promise.all(teamsAll.map(async ({ id }) =>
     //   this.getTeamHomeAndMatches(id, path)));
 
-    const arrays = await this.getTeamHomeAndMatches(1, path);
+    // const arrays = await this.getTeamHomeAndMatches(1, path);
+    const result = await this.getTeamHomeAndMatches(1, path);
+    const orderned = this.orderTeamsLeaderboard(result);
 
     // const orderned = this.orderTeamsLeaderboard(arrays);
 
-    return { statusCode: HttpCode.OK, message: arrays };
+    return { statusCode: HttpCode.OK, message: orderned };
   }
 
   static async getAll(): Promise<ITeams[]> {
-    // const teamsAll = await TeamsService.idTeam();
-
     const result = await this.matchesAllsFinish();
     const orderned = this.orderTeamsLeaderboard(result);
 
     return orderned;
   }
 
-  static async returnsObject(teamName: string, array: IMatches[], id: number)
-    : Promise<ILeaderBoard> {
+  static returnsObject(teamName: string, array: IMatches[], id: number)
+    : ILeaderBoard {
     const objectReduce = {
       name: teamName,
       totalPoints: this.calculatePontuation(id, array),
@@ -70,12 +70,10 @@ export default class ServiceLeaderBoard {
         return this.returnsObject(teamName, arrayAll, id);
       }));
 
-    // console.log('arrayObject', array);
-
     return array;
   }
 
-  static async getTeamHomeAndMatches(indexTeam: number, path: string): Promise<ILeaderBoard> {
+  static async getTeamHomeAndMatches(indexTeam: number, path: string): Promise<ILeaderBoard[]> {
     const teamHomeOrAway = path === 'home' ? 'teamHome' : 'teamAway';
 
     const matchesAllsFinish = await Teams.findAll({
@@ -84,22 +82,23 @@ export default class ServiceLeaderBoard {
       ],
     });
 
-    const arrayTeamFilter = matchesAllsFinish.map(({ dataValues }) => dataValues)
-      .filter((team) => team[teamHomeOrAway] === indexTeam);
+    const arrayFilter = await Promise.all(matchesAllsFinish
+      .map(({ dataValues: { teamName, id, teamHome, teamAway } }) => {
+        if (teamHomeOrAway === 'teamHome') {
+          return this.returnsObject(teamName, teamHome, id);
+        }
+        return this.returnsObject(teamName, teamAway, id);
+      }));
 
-    const objectLeaderboard = await this.returnsObject(teamHomeOrAway, arrayTeamFilter, 1);
+    // console.log(arrayFilter);
 
-    return objectLeaderboard;
+    // const arrayTeamFilter = matchesAllsFinish.map(({ dataValues }) => dataValues)
+    //   .filter((team) => team[teamHomeOrAway] === indexTeam);
+
+    // const objectLeaderboard = await this.returnsObject(teamHomeOrAway, arrayTeamFilter, 1);
+
+    return arrayFilter;
   }
-
-  // static async getNameTeam(team: string, array: IMatches[]): Promise<string> {
-  //   if (team === 'homeTeam') {
-  //     const nameTeam = await TeamsService.nameTeam(array[0].homeTeam);
-  //     return nameTeam;
-  //   }
-  //   const nameTeam = await TeamsService.nameTeam(array[0].awayTeam);
-  //   return nameTeam;
-  // }
 
   static calculatePontuation(id: number, array: IMatches[]): number {
     const pontuations = array
