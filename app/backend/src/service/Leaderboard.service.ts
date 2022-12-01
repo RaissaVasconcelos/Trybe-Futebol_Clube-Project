@@ -46,8 +46,6 @@ export default class ServiceLeaderBoard {
     const arrayTeamFilter = matchesAllsFinish.map(({ dataValues }) => dataValues)
       .filter((team) => team[teamHomeOrAway] === indexTeam);
 
-    console.log(arrayTeamFilter);
-
     const objectLeaderboard = await this.returnsObject(teamHomeOrAway, arrayTeamFilter);
 
     return objectLeaderboard;
@@ -121,7 +119,7 @@ export default class ServiceLeaderBoard {
   }
 
   static goalsFavor(team: string, array: IMatches[]): number {
-    if (team === 'homeAway') {
+    if (team === 'homeTeam') {
       const totalGoalsfavor = array.reduce((acc, { homeTeamGoals }) => acc + homeTeamGoals, 0);
       return totalGoalsfavor;
     }
@@ -130,7 +128,7 @@ export default class ServiceLeaderBoard {
   }
 
   static goalsOnw(team: string, array: IMatches[]): number {
-    if (team === 'homeAway') {
+    if (team === 'homeTeam') {
       const totalGoalsOwn = array.reduce((acc, { awayTeamGoals }) => acc + awayTeamGoals, 0);
       return totalGoalsOwn;
     }
