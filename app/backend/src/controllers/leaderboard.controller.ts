@@ -7,4 +7,9 @@ export default class LeaderboardController {
     const { statusCode, message } = await Leaderboard.getAllLeaderboard(path);
     res.status(statusCode).json(message);
   }
+
+  static async getAllLeard(_req: Request, res: Response) {
+    const result = await Leaderboard.getAll();
+    res.status(200).json(result);
+  }
 }

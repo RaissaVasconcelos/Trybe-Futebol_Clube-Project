@@ -5,5 +5,6 @@ const route = Router();
 
 route.get('/home', LeaderboardController.getAll);
 route.get('/away', LeaderboardController.getAll);
+route.get('/', LeaderboardController.getAllLeard);
 
 export default route;
