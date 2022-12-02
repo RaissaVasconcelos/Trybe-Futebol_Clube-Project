@@ -1,8 +1,10 @@
 // import { Op } from 'sequelize';
-import { IServiceResp } from '../interfaces/messageObject.interface';
+import ErrorHttp, { HttpCode } from '../error/errorHttp';
+
 import Matches from '../database/models/MatchesModel';
 import Teams from '../database/models/TeamsModel';
-import ErrorHttp, { HttpCode } from '../error/errorHttp';
+
+import { IServiceResp } from '../interfaces/messageObject.interface';
 import IMatches, { IMatchesCreate, IMatchesupdate } from '../interfaces/matches.interface';
 
 export default class MatchesService {
@@ -83,9 +85,3 @@ export default class MatchesService {
     return { statusCode: HttpCode.OK, message: updatedMatche.message };
   }
 }
-
-// const result = await Teams.findAll({
-//     where: {
-//       [Op.and]: [{ id: awayTeam }, { id: homeTeam }],
-//     }
-// });

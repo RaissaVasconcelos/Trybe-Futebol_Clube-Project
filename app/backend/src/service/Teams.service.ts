@@ -1,7 +1,9 @@
-import { IServiceResp } from '../interfaces/messageObject.interface';
-import Teams from '../database/models/TeamsModel';
-import { ITeams } from '../interfaces/teams.interface';
 import ErrorHttp, { HttpCode } from '../error/errorHttp';
+
+import Teams from '../database/models/TeamsModel';
+
+import { IServiceResp } from '../interfaces/messageObject.interface';
+import { ITeams } from '../interfaces/teams.interface';
 
 export default class TeamsService {
   static async getAllTeams(): Promise<IServiceResp<ITeams[]>> {

@@ -1,33 +1,23 @@
+import { HttpCode } from '../error/errorHttp';
+
+import Matches from '../database/models/MatchesModel';
+import Teams from '../database/models/TeamsModel';
+
 import { IServiceResp } from '../interfaces/messageObject.interface';
 import ILeaderBoard from '../interfaces/leaderboard.interface';
-import { HttpCode } from '../error/errorHttp';
-import Matches from '../database/models/MatchesModel';
 import IMatches from '../interfaces/matches.interface';
-// import TeamsService from './Teams.service';
-import Teams from '../database/models/TeamsModel';
-import { ITeams } from '../interfaces/teams.interface';
 
 export default class ServiceLeaderBoard {
-  static async getAllLeaderboard(path: string): Promise<IServiceResp<ILeaderBoard>> {
-    // const teamsAll = await TeamsService.idTeam();
-
-    // const arrays = await Promise.all(teamsAll.map(async ({ id }) =>
-    //   this.getTeamHomeAndMatches(id, path)));
-
-    // const arrays = await this.getTeamHomeAndMatches(1, path);
-    const result = await this.getTeamHomeAndMatches(1, path);
+  static async getAllLeaderboardFilter(path: string): Promise<IServiceResp<ILeaderBoard>> {
+    const result = await this.getTeamHomeAndAway(path);
     const orderned = this.orderTeamsLeaderboard(result);
-
-    // const orderned = this.orderTeamsLeaderboard(arrays);
-
     return { statusCode: HttpCode.OK, message: orderned };
   }
 
-  static async getAll(): Promise<ITeams[]> {
-    const result = await this.matchesAllsFinish();
+  static async getAllLeaderboard(): Promise<IServiceResp<ILeaderBoard>> {
+    const result = await this.getTeamsAlls();
     const orderned = this.orderTeamsLeaderboard(result);
-
-    return orderned;
+    return { statusCode: HttpCode.OK, message: orderned };
   }
 
   static returnsObject(teamName: string, array: IMatches[], id: number)
@@ -47,16 +37,17 @@ export default class ServiceLeaderBoard {
     return objectReduce;
   }
 
-  static orderTeamsLeaderboard(array: any[]): any[] {
+  static orderTeamsLeaderboard(array: ILeaderBoard[]): ILeaderBoard[] {
     const orderTeams = array.sort((a, b) => b.totalPoints - a.totalPoints
       || b.totalVictories - a.totalVictories
       || b.goalsBalance - a.goalsBalance
       || b.goalsFavor - a.goalsFavor
       || b.goalsOwn - a.goalsOwn);
+
     return orderTeams;
   }
 
-  static async matchesAllsFinish(): Promise<ILeaderBoard[]> {
+  static async getTeamsAlls(): Promise<ILeaderBoard[]> {
     const matchesAllsFinish = await Teams.findAll({
       include: [
         { model: Matches, as: 'teamHome', where: { inProgress: false } },
@@ -73,7 +64,7 @@ export default class ServiceLeaderBoard {
     return array;
   }
 
-  static async getTeamHomeAndMatches(indexTeam: number, path: string): Promise<ILeaderBoard[]> {
+  static async getTeamHomeAndAway(path: string): Promise<ILeaderBoard[]> {
     const teamHomeOrAway = path === 'home' ? 'teamHome' : 'teamAway';
 
     const matchesAllsFinish = await Teams.findAll({
@@ -89,13 +80,6 @@ export default class ServiceLeaderBoard {
         }
         return this.returnsObject(teamName, teamAway, id);
       }));
-
-    // console.log(arrayFilter);
-
-    // const arrayTeamFilter = matchesAllsFinish.map(({ dataValues }) => dataValues)
-    //   .filter((team) => team[teamHomeOrAway] === indexTeam);
-
-    // const objectLeaderboard = await this.returnsObject(teamHomeOrAway, arrayTeamFilter, 1);
 
     return arrayFilter;
   }

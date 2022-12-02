@@ -1,8 +1,10 @@
 import { compare } from 'bcryptjs';
 import createToken from '../utils/jwt';
-import User from '../database/models/UserModel';
-import { ILogin, IUser } from '../interfaces/user.interface';
 import ErrorHttp, { HttpCode } from '../error/errorHttp';
+
+import User from '../database/models/UserModel';
+
+import { ILogin, IUser } from '../interfaces/user.interface';
 import { IServiceResp } from '../interfaces/messageObject.interface';
 
 export default class LoginService {
