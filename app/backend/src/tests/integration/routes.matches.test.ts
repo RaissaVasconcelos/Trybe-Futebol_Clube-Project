@@ -9,8 +9,6 @@ import MatchesModel from '../../database/models/MatchesModel';
 
 import { matches, matchesInProgressTrue } from '../mocks/matches.mock.test';
 
-import authorizateUser from '../../utils/jwt.validation';
-
 chai.use(chaiHttp);
 
 const { app } = new App();
