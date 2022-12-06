@@ -6,13 +6,13 @@ import * as bcryptjs from 'bcryptjs';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
-import App from '../../app';
-import UserModel from '../../database/models/UserModel';
+import App from '../app';
+import UserModel from '../database/models/UserModel';
 
 import { user,
   token,
   passwordInvalid,
-  emailInvalid } from '../mocks/login.mock.test';
+  emailInvalid } from './mocks/login.mock.test';
 
 import { Response } from 'superagent';
 
