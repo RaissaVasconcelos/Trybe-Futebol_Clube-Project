@@ -4,10 +4,10 @@ import * as jwt from 'jsonwebtoken';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
-import App from '../../app';
-import MatchesModel from '../../database/models/MatchesModel';
+import App from '../app';
+import MatchesModel from '../database/models/MatchesModel';
 
-import { matches, matchesInProgressTrue } from '../mocks/matches.mock.test';
+import { matches, matchesInProgressTrue } from './mocks/matches.mock.test';
 
 chai.use(chaiHttp);
 
