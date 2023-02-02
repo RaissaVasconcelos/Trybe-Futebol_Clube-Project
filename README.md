@@ -15,7 +15,7 @@ projeto.
 - Chai
 - Sinon
 
-## Estrutura do Projeto
+## 📂 Estrutura do Projeto
 
 ### Banco de Dados
   
@@ -56,10 +56,33 @@ Para conseguir executar os comandos do abaixo também é necessário que seu sis
 
     npm run compose:up 
    
-### 2 - APara para os container, na raiz do projeto execute:
+### 2 - Para finalizar os container, na raiz do projeto execute:
 
     docker-compose down
 
-    
-    
+## 🙎🏻‍♀️ Usuários para fazer Login
 
+Nessa aplicação é necessário fazer o login com um email e senha. A tabela abaixo disponibiliza usuários pré-cadastrados para o acesso:
+
+|   Nome   |      Email      |     Senha    |
+| :------: | :-------------: | :----------: |
+|   Admin  | admin@admin.com | secret_admin |
+|   User   | user@user.com   | secret_user  |
+    
+## 💻 Funcionalidades 
+
+È possivel visualizar o rank de pontuação e informação das partidas dos times,
+além de possibilitar um novo rank de pontuação conforme um filtro com as opções
+de time da casa, time visitante e uma pontuação geral.
+
+
+![image](https://user-images.githubusercontent.com/76914915/216458140-63864efa-dd74-4c24-a9ae-f8b065ee67ab.png)
+
+E ainda foi desenvolvido uma tela com as partidas em andamento e partidas
+finalizadas dos times. 
+
+![image](https://user-images.githubusercontent.com/76914915/216458359-140c41e7-fe47-4323-a17d-3d0bc4b07f50.png)
+
+<div>
+  <p align="center">🍀</p>
+</div>
