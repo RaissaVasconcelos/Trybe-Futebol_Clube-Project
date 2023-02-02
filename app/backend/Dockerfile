@@ -3,17 +3,12 @@ FROM node:16.14-alpine
 
 WORKDIR /app-backend
 
-# trazer o package.json para instalação do app na nova imagem
-COPY package* ./
+COPY package.json .
+
+RUN npm install
+
+COPY . .
 
 EXPOSE 3001
 
-# instalar as dependencias
-RUN npm install
-
-# copiar todas as novas dependencias neste app
-COPY . .
-
-ENTRYPOINT ["npm", "run"]
-
-CMD [ "dev" ]
+ENTRYPOINT [ "npm", "start" ]

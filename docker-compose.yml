@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   frontend:
+    container_name: tfc_front
     build: ./frontend
     ports:
       - 3000:3000
@@ -16,7 +17,7 @@ services:
       timeout: 10s
       retries: 5
   backend:
-    container_name: app_backend
+    container_name: tfc_backend
     build: ./backend
     ports:
       - 3001:3001
@@ -40,7 +41,7 @@ services:
       retries: 5
   db:
     image: mysql:8.0.21
-    container_name: db
+    container_name: mysql
     platform: linux/x86_64
     ports:
       - 3002:3306
