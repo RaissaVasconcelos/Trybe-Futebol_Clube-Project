@@ -1,9 +1,6 @@
-# Trybe-Futebol-Clube
+# Trybe-Futebol-Clube ⚽
 
-O TFC é um site informativo sobre partidas e classificações de futebol! ⚽
-
-## 🗯️ Informações Importantes
-
+O TFC é um site informativo sobre partidas e classificações de futebol!
 É uma aplicação FullStack que gerencia os resultados de partidas de futebol,
 minha responsabilidade era desenvolver o back-end para atender as regras do
 projeto. 
