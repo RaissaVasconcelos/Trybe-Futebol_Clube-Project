@@ -58,7 +58,7 @@ Para conseguir executar os comandos do abaixo também é necessário que seu sis
    
 ### 2 - Para finalizar os container, na raiz do projeto execute:
 
-    docker-compose down
+    npm run compose:down
 
 ## 🙎🏻‍♀️ Usuários para fazer Login
 
