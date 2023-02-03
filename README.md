@@ -62,7 +62,8 @@ Para conseguir executar os comandos do abaixo também é necessário que seu sis
 
 ## 🙎🏻‍♀️ Usuários para fazer Login
 
-Nessa aplicação é necessário fazer o login com um email e senha. A tabela abaixo disponibiliza usuários pré-cadastrados para o acesso:
+Nessa aplicação é necessário fazer o login com um email e senha no endereço http://localhost:3000/login.
+A tabela abaixo disponibiliza usuários pré-cadastrados para o acesso:
 
 |   Nome   |      Email      |     Senha    |
 | :------: | :-------------: | :----------: |
